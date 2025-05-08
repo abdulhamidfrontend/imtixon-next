@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { Suspense } from "react";
 import Navbar from "../Components/Navbar";
 import Hero from "@/app/Components/Hero";
 import Category from "../Products/Category";
@@ -10,11 +11,13 @@ const Home = () => {
     <div>
       <Navbar />
       <Hero />
-      <div className="flex ">
+      <div className="flex">
         <Category />
-        <Cards />
-      </div>
 
+        <Suspense fallback={<p className="p-5">Yuklanmoqda...</p>}>
+          <Cards />
+        </Suspense>
+      </div>
       <Footer />
     </div>
   );
