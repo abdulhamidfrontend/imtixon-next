@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
+import { IoArrowBackSharp } from "react-icons/io5";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -90,6 +91,12 @@ const ProductDetail = () => {
                   Barcode : {product.meta.barcode}
                 </h1>
               </div>
+              <Link href={"/Blog/Posts"}>
+                <button className="flex absolute bottom-[20px] right-[20px] cursor-pointer hover:underline items-center gap-2 text-blue-600">
+                  <IoArrowBackSharp />
+                  BACK TO POSTS
+                </button>
+              </Link>
               <div>
                 <img className="w-[90px]" src={product.meta.qrCode} alt="" />
               </div>
