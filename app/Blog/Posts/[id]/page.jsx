@@ -37,15 +37,15 @@ const PostDetails = () => {
         <div className="flex items-center gap-3 my-5">
           <button className="flex items-center cursor-pointer gap-1.5 font-medium">
             <FaEye />
-            <p>{post.views}</p>
+            <p>{post.views || 0}</p>
           </button>
           <button className="flex items-center cursor-pointer gap-1.5 font-medium">
             <AiOutlineLike />
-            <p>{post.reactions.likes}</p>
+            <p>{post.reactions?.likes || 0}</p>
           </button>
           <button className="flex items-center cursor-pointer gap-1.5 font-medium">
             <AiOutlineDislike />
-            <p>{post.reactions.dislikes}</p>
+            <p>{post.reactions?.dislikes || 0}</p>
           </button>
           <button className="flex items-center cursor-pointer gap-1.5 font-medium">
             <IoShareSocialOutline />

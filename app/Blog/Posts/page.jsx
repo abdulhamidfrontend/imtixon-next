@@ -3,14 +3,17 @@ import React, { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
 import Link from "next/link";
-import { IoSearch } from "react-icons/io5";
+import { IoSearch, IoAddCircleOutline } from "react-icons/io5";
 import Navbar from "@/app/Components/Navbar";
 import Footer from "@/app/Components/Footer";
+import { Modal, Button, Input, message } from "antd";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchCard, setSearchCard] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [newPost, setNewPost] = useState({ title: "", body: "" });
 
   useEffect(() => {
     fetch("https://dummyjson.com/posts")
@@ -25,7 +28,27 @@ const Posts = () => {
       });
   }, []);
 
-  if (loading) return <p className="text-center my-10">Loading...</p>;
+  const handleAddPost = () => {
+    fetch("https://dummyjson.com/posts/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: newPost.title,
+        body: newPost.body,
+        userId: 5,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        message.success("Post added successfully!");
+        setPosts((prev) => [data, ...prev]);
+        setNewPost({ title: "", body: "" });
+        setModalOpen(false);
+      })
+      .catch(() => {
+        message.error("Failed to add post.");
+      });
+  };
 
   const filteredPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchCard.toLowerCase())
@@ -34,7 +57,6 @@ const Posts = () => {
   return (
     <div className="max-w-[90%] m-auto">
       <Navbar />
-
       <h2 className="text-center font-bold mb-4 text-3xl mt-5">My Feed</h2>
 
       <form
@@ -50,6 +72,53 @@ const Posts = () => {
         />
         <IoSearch className="text-gray-500" />
       </form>
+
+      <div className="add">
+        <IoAddCircleOutline
+          className="text-4xl ml-10 mt-5 cursor-pointer text-green-600"
+          onClick={() => setModalOpen(true)}
+        />
+      </div>
+
+      <Modal
+        title="Add New Post"
+        open={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        width={400}
+        style={{ height: 500 }}
+        footer={[
+          <Button key="cancel" onClick={() => setModalOpen(false)}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleAddPost}
+            disabled={!newPost.title || !newPost.body}
+          >
+            Submit
+          </Button>,
+        ]}
+      >
+        <div className="flex flex-col gap-3 h-full">
+          <Input
+            placeholder="Add Title"
+            value={newPost.title}
+            onChange={(e) =>
+              setNewPost((prev) => ({ ...prev, title: e.target.value }))
+            }
+          />
+          <Input.TextArea
+            style={{ resize: "none" }}
+            placeholder="Add Body"
+            value={newPost.body}
+            onChange={(e) =>
+              setNewPost((prev) => ({ ...prev, body: e.target.value }))
+            }
+            rows={4}
+          />
+        </div>
+      </Modal>
 
       <div className="cards my-10 flex items-center flex-wrap gap-5 justify-evenly">
         {filteredPosts.length > 0 ? (
@@ -71,11 +140,11 @@ const Posts = () => {
                 </button>
                 <button className="flex items-center gap-2 border-r border-l px-10 border-gray-200 text-gray-500 hover:text-green-600 cursor-pointer">
                   <AiOutlineLike />
-                  <p className="text-[12px]">{post.reactions.likes}</p>
+                  <p className="text-[12px]">{post.reactions?.likes}</p>
                 </button>
                 <button className="flex items-center gap-2 cursor-pointer text-gray-500 hover:text-green-600">
                   <AiOutlineDislike />
-                  <p className="text-[12px]">{post.reactions.dislikes}</p>
+                  <p className="text-[12px]">{post.reactions?.dislikes}</p>
                 </button>
               </div>
             </div>
