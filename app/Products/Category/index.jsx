@@ -4,18 +4,22 @@ import { useRouter } from "next/navigation";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null); // activeCategory state qo'shildi
+  const [activeCategory, setActiveCategory] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
     fetch("https://dummyjson.com/products/categories")
       .then((res) => res.json())
-      .then((data) => setCategories(data))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCategories(data);
+        }
+      })
       .catch((error) => console.error("Xatolik:", error));
   }, []);
 
   const handleCategoryClick = (category) => {
-    setActiveCategory(category.slug); // Aktiv kategoriya sifatida slugni saqlaymiz
+    setActiveCategory(category.slug);
     router.push(`/Products?category=${category.slug}`);
   };
 
@@ -30,9 +34,7 @@ const Category = () => {
             key={index}
             onClick={() => handleCategoryClick(category)}
             className={`text-[15px] leading-[267%] font-normal text-[#3d3d3d] hover:text-[#46a358] hover:font-bold cursor-pointer capitalize ${
-              activeCategory === category.slug
-                ? "text-[#46a358] font-bold" // Aktiv kategoriya uchun maxsus stil
-                : ""
+              activeCategory === category.slug ? "text-[#46a358] font-bold" : ""
             }`}
           >
             {category.name}

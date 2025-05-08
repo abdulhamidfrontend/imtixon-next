@@ -23,7 +23,6 @@ const Details = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     if (userData) {
       setUser(userData);
-      // Form ulanmaguncha kutish uchun setTimeout ishlatiladi
       setTimeout(() => {
         form.setFieldsValue({
           firstname: userData.firstName,
