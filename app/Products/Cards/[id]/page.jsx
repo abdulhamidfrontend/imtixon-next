@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Navbar from "../../../Components/Navbar";
 import Footer from "../../../Components/Footer";
-import { IoArrowBackSharp } from "react-icons/io5";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
